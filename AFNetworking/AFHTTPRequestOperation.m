@@ -56,7 +56,7 @@ NSSet * AFContentTypesFromHTTPHeader(NSString *string) {
 
 static void AFSwizzleClassMethodWithClassAndSelectorUsingBlock(Class klass, SEL selector, void *block) {
     Method originalMethod = class_getClassMethod(klass, selector);
-    IMP implementation = imp_implementationWithBlock(block);
+    IMP implementation = imp_implementationWithBlock((__bridge id)(block));
     class_replaceMethod(objc_getMetaClass([NSStringFromClass(klass) UTF8String]), selector, implementation, method_getTypeEncoding(originalMethod));
 }
 
@@ -129,13 +129,17 @@ NSString * AFCreateIncompleteDownloadDirectoryPath(void) {
 
 - (void)dealloc {
     
-    if (_successCallbackQueue) { 
+    if (_successCallbackQueue) {
+		#if (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0) && (__MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_8)
         dispatch_release(_successCallbackQueue);
+		#endif
         _successCallbackQueue = NULL;
     }
     
-    if (_failureCallbackQueue) { 
-        dispatch_release(_failureCallbackQueue); 
+    if (_failureCallbackQueue) {
+		#if (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0) && (__MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_8)
+        dispatch_release(_failureCallbackQueue);
+		#endif
         _failureCallbackQueue = NULL;
     }
 
@@ -194,12 +198,16 @@ NSString * AFCreateIncompleteDownloadDirectoryPath(void) {
 - (void)setSuccessCallbackQueue:(dispatch_queue_t)successCallbackQueue {
     if (successCallbackQueue != _successCallbackQueue) {
         if (_successCallbackQueue) {
+			#if (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0) && (__MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_8)
             dispatch_release(_successCallbackQueue);
+			#endif
             _successCallbackQueue = NULL;
         }
 
         if (successCallbackQueue) {
+			#if (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0) && (__MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_8)
             dispatch_retain(successCallbackQueue);
+			#endif
             _successCallbackQueue = successCallbackQueue;
         }
     }    
@@ -208,12 +216,16 @@ NSString * AFCreateIncompleteDownloadDirectoryPath(void) {
 - (void)setFailureCallbackQueue:(dispatch_queue_t)failureCallbackQueue {
     if (failureCallbackQueue != _failureCallbackQueue) {
         if (_failureCallbackQueue) {
+			#if (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0) && (__MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_8)
             dispatch_release(_failureCallbackQueue);
+			#endif
             _failureCallbackQueue = NULL;
         }
         
         if (failureCallbackQueue) {
+			#if (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0) && (__MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_8)
             dispatch_retain(failureCallbackQueue);
+			#endif
             _failureCallbackQueue = failureCallbackQueue;
         }
     }    

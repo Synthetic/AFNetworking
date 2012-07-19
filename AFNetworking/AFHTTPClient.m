@@ -562,7 +562,9 @@ static void AFNetworkReachabilityReleaseCallback(const void *info) {
                 completionBlock(operations);
             }
         });
+	#if (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0) && (__MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_8)
         dispatch_release(dispatchGroup);
+	#endif
     }];
     
     NSPredicate *finishedOperationPredicate = [NSPredicate predicateWithFormat:@"isFinished == YES"];
